@@ -45,7 +45,7 @@ function make_lognormal(riskmu, risksd)
 end
 
 # Master function for base model (uses helpers below)
-function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool; save_rvs::Bool=true, setsim::Function=setsim_base, getsim::Function=getsim_base, throwex::Bool=false)
+function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool; save_rvs::Bool=true, setsim::Function=setsim_base, getsim::Function=getsim_base, throwex::Bool=false, sample_id_subset::Union{Vector, Nothing} = nothing)
     draws = presim_base(trials, persist_dist, emuc_dist, prtp_dist)
 
     sim = create_fair_monte_carlo(model, trials; end_year=2200,
@@ -53,7 +53,8 @@ function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dis
                                                     "large_constrained_parameter_files"),
                                   delete_downloaded_data=false,
                                   other_mc_set=(inst, ii) -> setsim(inst, draws, ii),
-                                  other_mc_get=(inst) -> getsim(inst, draws, save_rvs=save_rvs), throwex=throwex)
+                                  other_mc_get=(inst) -> getsim(inst, draws, save_rvs=save_rvs), throwex=throwex,
+                                  sample_id_subset=sample_id_subset)
     sim()
 end
 
