@@ -92,10 +92,11 @@ function setsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
 
     # Damages
     beta1, beta2 = getbhmbetas("distribution")
-    update_param!(inst, :Consumption_beta1, beta1)
-    update_param!(inst, :Consumption_beta2, beta2)
+    # comment these out in order to allow for deterministic MC runs
+    # update_param!(inst, :Consumption_beta1, beta1)
+    # update_param!(inst, :Consumption_beta2, beta2)
 
-    update_param!(inst, :Consumption_slruniforms, rand(Uniform(0, 1), dim_count(model, :country)))
+    # update_param!(inst, :Consumption_slruniforms, rand(Uniform(0, 1), dim_count(model, :country)))
 end
 
 function getsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFrame; save_rvs::Bool=true)
