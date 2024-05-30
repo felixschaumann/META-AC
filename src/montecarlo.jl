@@ -107,6 +107,7 @@ function setsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
     
     if amoc_component_there
         update_param!(inst, :AMOC_uniforms, rand(Uniform(0, 1), dim_count(inst, :time)))
+    end
 end
 
 function getsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFrame; save_rvs::Bool=true)
