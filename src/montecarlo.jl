@@ -101,9 +101,9 @@ function setsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
     try
         inst[:AMOC]
         amoc_component_there=true
-     catch e
+    catch e
         amoc_component_there=false
-     end
+    end
     
     if amoc_component_there
         update_param!(inst, :AMOC_uniforms, rand(Uniform(0, 1), dim_count(inst, :time)))
