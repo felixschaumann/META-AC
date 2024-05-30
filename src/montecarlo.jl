@@ -108,7 +108,7 @@ function setsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
     
     if amoc_component_there
         update_param!(inst, :AMOC_uniforms, rand(Uniform(0, 1), dim_count(inst, :time)))
-    elseif amoc_component_there == missing
+    elseif ismissing(amoc_component_there)
         println("Test for existence of AMOC component failed.")
     end
 end
