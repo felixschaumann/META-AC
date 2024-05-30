@@ -97,6 +97,16 @@ function setsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
     # update_param!(inst, :Consumption_beta2, beta2)
 
     # update_param!(inst, :Consumption_slruniforms, rand(Uniform(0, 1), dim_count(model, :country)))
+    
+    try
+        inst[:AMOC]
+        amoc_component_there=true
+     catch e
+        amoc_component_there=false
+     end
+    
+    if amoc_component_there
+        update_param!(inst, :AMOC_uniforms, rand(Uniform(0, 1), dim_count(inst, :time)))
 end
 
 function getsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFrame; save_rvs::Bool=true)
