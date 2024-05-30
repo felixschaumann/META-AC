@@ -98,6 +98,7 @@ function setsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
 
     # update_param!(inst, :Consumption_slruniforms, rand(Uniform(0, 1), dim_count(model, :country)))
     
+    amoc_component_there = missing
     try
         inst[:AMOC]
         amoc_component_there=true
@@ -107,6 +108,8 @@ function setsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
     
     if amoc_component_there
         update_param!(inst, :AMOC_uniforms, rand(Uniform(0, 1), dim_count(inst, :time)))
+    elseif amoc_component_there == missing
+        println("Test for existence of AMOC component failed.")
     end
 end
 
