@@ -45,8 +45,8 @@ function make_lognormal(riskmu, risksd)
 end
 
 # Master function for base model (uses helpers below)
-function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool; save_rvs::Bool=true, setsim::Function=setsim_base, getsim::Function=getsim_base, throwex::Bool=false, sample_id_subset::Union{Vector, Nothing} = nothing)
-    draws = presim_base(trials, persist_dist, emuc_dist, prtp_dist)
+function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool; eta_AMOC_dist::Bool=false, mean_eta_AMOC::Float64=nothing, std_eta_AMOC::Float64=nothing, save_rvs::Bool=true, setsim::Function=setsim_base, getsim::Function=getsim_base, throwex::Bool=false, sample_id_subset::Union{Vector, Nothing} = nothing)
+    draws = presim_base(trials, persist_dist, emuc_dist, prtp_dist, eta_AMOC_dist, mean_eta_AMOC, std_eta_AMOC)
 
     sim = create_fair_monte_carlo(model, trials; end_year=2200,
                                   data_dir=joinpath(dirname(pathof(MimiFAIRv2)), "..", "data",
@@ -59,7 +59,7 @@ function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dis
 end
 
 
-function presim_base(trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool)
+function presim_base(trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool, eta_AMOC_dist::Bool, mean_eta_AMOC::Float64, std_eta_AMOC::Float64)
     draws = DataFrame(mc=1:trials)
 
     # Utility
@@ -78,6 +78,11 @@ function presim_base(trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_di
         draws.Consumption_PRTP = rand(TriangularDist(0.001, 0.02, 0.01), trials)
     else
         rand(TriangularDist(0.001, 0.02, 0.01), trials)
+    end
+    if eta_AMOC_dist
+        draws.AMOC_emulator_eta_AMOC = rand(Normal(mean_eta_AMOC, std_eta_AMOC), trials)
+    else
+        rand(Normal(mean_eta_AMOC, std_eta_AMOC), trials)
     end
 
     draws
