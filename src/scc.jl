@@ -61,7 +61,7 @@ end
 
 ## Monte Carlo SCC calculations
 
-function calculate_scc_base_mc(model::Model, trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool, pulse_year::Int64, pulse_size::Float64, emuc::Float64; eta_AMOC_dist_scc::Bool=false, mean_eta_AMOC_scc::Float64=nothing, std_eta_AMOC_scc::Float64=nothing, calc_nationals::Bool=true, sample_id_subset::Union{Vector, Nothing}=nothing)
+function calculate_scc_base_mc(model::Model, trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool, pulse_year::Int64, pulse_size::Float64, emuc::Float64; eta_AMOC_dist_scc::Bool=false, mean_eta_AMOC_scc::Union{Float64, Nothing}=nothing, std_eta_AMOC_scc::Union{Float64, Nothing}=nothing, calc_nationals::Bool=true, sample_id_subset::Union{Vector, Nothing}=nothing)
     mm = calculate_scc_setup(model, pulse_year, pulse_size)
 
     function setsim_base_scc(inst::Union{ModelInstance, MarginalInstance}, draws::DataFrame, ii::Int64)
