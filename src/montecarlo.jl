@@ -80,7 +80,7 @@ function presim_base(trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_di
         rand(TriangularDist(0.001, 0.02, 0.01), trials)
     end
     if eta_AMOC_dist
-        draws.AMOC_emulator_eta_AMOC = rand(Normal(mean_eta_AMOC, std_eta_AMOC), trials)    
+        draws.AMOC_Carbon_eta_AMOC = rand(Normal(mean_eta_AMOC, std_eta_AMOC), trials)    
     end
 
     draws
