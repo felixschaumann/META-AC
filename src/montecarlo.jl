@@ -134,12 +134,29 @@ function getsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
     mcres[:SLRModel_SLR] = inst[:SLRModel, :SLR]
     mcres[:PatternScaling_T_country] = inst[:PatternScaling, :T_country]
     mcres[:TemperatureConverter_T_AT] = inst[:TemperatureConverter, :T_AT]
-
+    
     ##Economic results
     mcres[:TotalDamages_total_damages_global_peryear_percent] = inst[:TotalDamages, :total_damages_global_peryear_percent] #Population-weighted global change in consumption due to climate damages (in % of counterfactual consumption per capita)
     # mcres[:total_damages_equiv_conspc_equity] = inst[:TotalDamages, :total_damages_equiv_conspc_equity] #Equity-weighted global equivalent change in consumption due to climate damages (in % of counterfactual consumption per capita)
     mcres[:TotalDamages_total_damages_percap_peryear_percent] = inst[:TotalDamages, :total_damages_percap_peryear_percent] #Annual % loss in per capita consumption due to climate damages. All years, can later pick 2030 and 2050 snapshots.
     #BGE, SC-CO2 and SC-CH4 grabbed from post-compile scripts.
+    mcres[:TotalDamages_total_damages_global_peryear] = inst[:TotalDamages, :total_damages_global_peryear]
+
+    mcres[:Utility_world_disc_utility] = inst[:Utility, :world_disc_utility]
+    
+    amoc_carbon_component_there = missing
+    try
+        inst[:AMOC_Carbon]
+        amoc_carbon_component_there = true
+    catch e
+        amoc_carbon_component_there = false
+    end
+    
+    if amoc_carbon_component_there
+        mcres[:AMOC_Carbon_cum_CO2_AMOC] = inst[:AMOC_Carbon, :cum_CO2_AMOC]
+    elseif ismissing(amoc_carbon_component_there)
+        println("Test for existence of AMOC carbon component failed.")
+    end
 
     ##Store number of MC iteration
     if save_rvs
