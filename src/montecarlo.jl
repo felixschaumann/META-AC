@@ -174,7 +174,8 @@ function sim_full(model::Union{Model, MarginalModel}, trials::Int64, pcf_calib::
 end
 
 function presim_full(trials::Int64, pcf_calib::String, amazon_calib::String, gis_calib::String, wais_calib::String, saf_calib::String, ais_dist::Bool, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool)
-    draws = presim_base(trials, persist_dist, emuc_dist, prtp_dist)
+    draws = presim_base(trials, persist_dist, emuc_dist, prtp_dist,
+                        false, nothing, nothing, false, nothing, false, nothing)
 
     # Interactions
 
