@@ -45,8 +45,8 @@ function make_lognormal(riskmu, risksd)
 end
 
 # Master function for base model (uses helpers below)
-function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool; eta_AMOC_dist::Bool=false, mean_eta_AMOC::Union{Float64, Nothing}=nothing, std_eta_AMOC::Union{Float64, Nothing}=nothing, beta_AMOC_dist::Bool=false, std_beta_AMOC::Union{Float64, Nothing}=nothing, AMOC_pi_dist::Bool=false, std_AMOC_pi::Union{Float64, Nothing}=nothing, save_rvs::Bool=true, setsim::Function=setsim_base, getsim::Function=getsim_base, throwex::Bool=false, sample_id_subset::Union{Vector, Nothing} = nothing)
-    draws = presim_base(trials, persist_dist, emuc_dist, prtp_dist, eta_AMOC_dist, mean_eta_AMOC, std_eta_AMOC, beta_AMOC_dist, std_beta_AMOC, AMOC_pi_dist, std_AMOC_pi)
+function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool; eta_AMOC_dist::Bool=false, mean_eta_AMOC::Union{Float64, Nothing}=nothing, std_eta_AMOC::Union{Float64, Nothing}=nothing, AMOC_proj_dist::Bool=false, std_AMOC_proj::Union{Float64, Nothing}=nothing, AMOC_pi_dist::Bool=false, std_AMOC_pi::Union{Float64, Nothing}=nothing, save_rvs::Bool=true, setsim::Function=setsim_base, getsim::Function=getsim_base, throwex::Bool=false, sample_id_subset::Union{Vector, Nothing} = nothing)
+    draws = presim_base(trials, persist_dist, emuc_dist, prtp_dist, eta_AMOC_dist, mean_eta_AMOC, std_eta_AMOC, AMOC_proj_dist, std_AMOC_proj, AMOC_pi_dist, std_AMOC_pi)
 
     sim = create_fair_monte_carlo(model, trials; end_year=2200,
                                   data_dir=joinpath(dirname(pathof(MimiFAIRv2)), "..", "data",
@@ -59,7 +59,7 @@ function sim_base(model::Union{Model, MarginalModel}, trials::Int64, persist_dis
 end
 
 
-function presim_base(trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool, eta_AMOC_dist::Bool, mean_eta_AMOC::Union{Float64, Nothing}, std_eta_AMOC::Union{Float64, Nothing}, beta_AMOC_dist::Bool, std_beta_AMOC::Union{Float64, Nothing}, AMOC_pi_dist::Bool, std_AMOC_pi::Union{Float64, Nothing})
+function presim_base(trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_dist::Bool, eta_AMOC_dist::Bool, mean_eta_AMOC::Union{Float64, Nothing}, std_eta_AMOC::Union{Float64, Nothing}, AMOC_proj_dist::Bool, std_AMOC_proj::Union{Float64, Nothing}, AMOC_pi_dist::Bool, std_AMOC_pi::Union{Float64, Nothing})
     draws = DataFrame(mc=1:trials)
 
     # Utility
@@ -82,8 +82,8 @@ function presim_base(trials::Int64, persist_dist::Bool, emuc_dist::Bool, prtp_di
     if eta_AMOC_dist
         draws.AMOC_Carbon_eta_AMOC = rand(Normal(mean_eta_AMOC, std_eta_AMOC), trials)    
     end
-    if beta_AMOC_dist
-        draws.std_beta_AMOC = ones(trials) .* std_beta_AMOC #vcat(zeros(265, trials), rand(Normal(0, std_beta_AMOC), 186, trials))
+    if AMOC_proj_dist
+        draws.std_AMOC_proj = ones(trials) .* std_AMOC_proj
     end
     if AMOC_pi_dist
        draws.AMOC_Carbon_std_AMOC_pi = rand(Normal(0, std_AMOC_pi), trials)
@@ -97,11 +97,9 @@ function setsim_base(inst::Union{ModelInstance, MarginalInstance}, draws::DataFr
         if has_parameter(getmd(inst), Symbol(names(draws)[jj]))
             update_param!(inst, Symbol(names(draws)[jj]), draws[ii, jj])
         end
-        if names(draws)[jj] == "std_beta_AMOC"
-            update_param!(inst, :AMOC_Carbon_beta_AMOC, vcat(zeros(265), rand(Normal(0, draws[ii, jj]), 186)))
-        end
-        if names(draws)[jj] == "AMOC_Carbon_std_AMOC_pi"
-            println("std AMOC pi: ", draws[ii, jj])
+        if names(draws)[jj] == "std_AMOC_proj"
+            std_AMOC_strength = rand(Normal(0, draws[ii, jj]), 186)
+            update_param!(inst, :AMOC_Carbon_std_AMOC_strength, vcat(zeros(265), std_AMOC_strength))
         end
     end
 
