@@ -37,19 +37,21 @@
 end
 
 function addAMOC_Carbon(model::Model, calibration::Union{Float64, Int, String}; before=nothing, after=:PatternScaling, scenario::String="ssp245", T_AT_2100=2.289, AMOC_2010=19.0)
-    include(srcdir("overarching_functions.jl"))
 
     amoc_carbon = add_comp!(model, AMOC_Carbon, before=before, after=after, first=2010)
     
-    T_AT_2010 = 0.854
-    amoc_carbon[:AMOC_2010] = AMOC_2010
-    
     # calibrate AMOC decrease
     if typeof(calibration) == Float64 || typeof(calibration) == Int
-        println("Calibrating AMOC to stylised decrease by $calibration in 2100 from 19 Sv in 2010.")
+        T_AT_2010 = 0.854
+        amoc_carbon[:AMOC_2010] = AMOC_2010
+        println("Calibrating AMOC to stylised 2100 decrease of $calibration Sv, starting from an AMOC strength of $(AMOC_2010) Sv in 2010.")
         amoc_carbon[:beta_AMOC] = (calibration / (T_AT_2100 - T_AT_2010)) * ones(dim_count(model, :time))
+        amoc_carbon[:MPI_AMOC_pi] = 18.9558
+        amoc_carbon[:AMOC_pi] = AMOC_2010 # assume that AMOC strength in 2010 is the same as in preindustrial times
+        amoc_carbon[:std_AMOC_pi] = 0.0
+        amoc_carbon[:std_AMOC_strength] = zeros(dim_count(model, :time))
     elseif typeof(calibration) == String
-        println("Calibrating AMOC to follow $calibration projection for $(scenario).")
+        println("Calibrating AMOC to follow $calibration projection for $(scenario) from 2015 to 2100.")
         beta_AMOC, AMOC_2010, T_AT_2010, AMOC_pi, MPI_AMOC_pi = calibrate_AMOC(model, calibration; scenario=scenario)
         amoc_carbon[:beta_AMOC] = beta_AMOC
         amoc_carbon[:AMOC_2010] = AMOC_2010
@@ -61,7 +63,7 @@ function addAMOC_Carbon(model::Model, calibration::Union{Float64, Int, String}; 
     end
     
     # calibrate carbon cycle effect
-    eta_AMOC = 0.025 * 22/6 # is updated by datadir() as output of hosing_regressions.jl when calling with get_amoc_carbon_model()
+    eta_AMOC = 0.023 * 22/6 # is updated by datadir() as output of hosing_regressions.jl when calling with get_amoc_carbon_model()
     amoc_carbon[:eta_AMOC] = eta_AMOC # will be updated during Monte Carlo runs
 
     amoc_carbon
