@@ -1,6 +1,6 @@
 # META-AC
 
-This is a version of the _Model for Economic Tipping point Analysis_ ([META](https://github.com/openmodels/META)) that includes the **AMOC Carbon (AC) feedback**. For the scripts of _Schaumann & Alastrué de Asenjo (2024): Weakening AMOC reduces carbon drawdown and increases the social cost of carbon_, see [here](https://github.com/felixschaumann/AMOC-Carbon).
+This is an extension of the _Model for Economic Tipping point Analysis_ ([META](https://github.com/openmodels/META)) that adds the **AMOC Carbon (AC) feedback**. For the scripts of _Schaumann & Alastrué de Asenjo (2024): Weakening AMOC reduces carbon drawdown and increases the social cost of carbon_, see [here](https://github.com/felixschaumann/AMOC-Carbon).
 
 META is an advanced integrated assessment model (SC-IAM), designed as a model-based meta-analysis of the effects of tipping points on the social cost of carbon (SCC). The model simulates greenhouse gas emissions, temperature and sea-level rise, and market and non-market damages at the country level, and the effects of eight climate tipping points that have been studied in the climate economics literature.
 
@@ -39,17 +39,17 @@ This new component
 
 #### 2. `data/CMIP6_amoc`
 
-This folder contains AMOC strength projection data for the following Earth System Models:
+This directory contains AMOC strength projection data for the following Earth System Models along the SSP2-4.5 scenario:
 
-- MIP-ESM
-- ACCESS-ESM
-- CanESM
-- GISS
-- MIROC
+- MPI-ESM1.2-LR
+- ACCESS-ESM1-5
+- CanESM5
+- GISS-E2-1-G
+- MIROC-ES2L
 - CESM2
-- NorESM
+- NorESM2-LM
 
-
+For each model, the directory also contains data about preindustrial AMOC strengths (`/data/CMIP6_amoc/AMOC_pi_values.csv`). For MPI-ESM1.2-LR and NorESM2-LM, it also contains projection data along SSP5-8.5 and SSP1-2.6, respectively.
 
 #### 3. `src/components/CO2Converter_AMOC.jl`
 
