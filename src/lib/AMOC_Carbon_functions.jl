@@ -86,16 +86,19 @@ function add_AMOC(model, amoc)
     return model
 end
 
-function get_amoc_carbon_model(amoc_calibration; scenario::String="ssp245", Dam::String="pointestimate")
+function get_amoc_carbon_model(amoc_calibration; scenario::String="ssp245", Dam::String="pointestimate", temp_pattern=false)
     
     model = base_model(rcp=scenario=="ssp126" ? "RCP3-PD/2.6" : "RCP$(scenario[5]).$(scenario[6])", ssp="SSP$(scenario[4])", tdamage=Dam=="BHM" ? "pointestimate" : Dam, slrdamage="mode"); run(model);
     replace!(model, :CO2Converter => CO2Converter_AMOC);
     Mimi.set_first_last!(model, :CO2Converter, first = 2010, last = 2200);
     set_param!(model, :CO2Converter, :co2_amoc, zeros(dim_count(model, :time)))
     
-    addAMOC_Carbon(model, amoc_calibration; scenario=scenario);
-    
+    addAMOC_Carbon(model, amoc_calibration, temp_pattern; scenario=scenario);
+
     connect_param!(model, :AMOC_Carbon=>:T_AT, :TemperatureConverter=>:T_AT);
+    connect_param!(model, :AMOC_Carbon=>:T_country_base, :PatternScaling=>:T_country);
+    connect_param!(model, :Consumption=>:T_country, :AMOC_Carbon=>:T_country_AMOC);    
+
     connect_param!(model, :CO2Converter=>:co2_amoc, :AMOC_Carbon=>:CO2_AMOC);
     
     update_param!(model, :Consumption, :damagepersist, 0.25);
