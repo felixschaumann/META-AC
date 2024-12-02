@@ -12,6 +12,7 @@ using Test
     include("test_ISM.jl")
     include("test_AMOC.jl")
     include("test_AMOC_compare.jl")
+    include("test_AMOC_Carbon.jl")
     include("test_PatternScaling.jl")
     include("test_Interactions.jl")
     include("test_Consumption.jl")
