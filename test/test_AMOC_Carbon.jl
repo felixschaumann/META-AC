@@ -2,6 +2,8 @@ using Test
 include("../src/scc.jl")
 include("../src/lib/AMOC_Carbon_functions.jl")
 
+model = base_model(); run(model)
+
 model_base = base_model(rcp="RCP4.5", ssp="SSP2", tdamage="pointestimate", slrdamage="mode")
 update_param!(model_base, :Consumption, :damagepersist, 0.25)
 run(model_base)
@@ -13,7 +15,7 @@ run(model_base2)
 scc_base2 = calculate_scc(model_base2, 2020, 10., 1.05)
 
 model_amoc_pattern = full_model(rcp="RCP4.5", ssp="SSP2", saf=false, interaction=false, pcf=false, omh=false, amaz=false, gis=false, ais=false, ism=false, amoc="IPSL")
-p_vector = ones(dim_count(model, :time))
+p_vector = ones(dim_count(model_base, :time))
 p_vector[266] = 0
 update_param!(model_amoc_pattern, :AMOC_uniforms, p_vector)
 update_param!(model_amoc_pattern, :Consumption, :damagepersist, 0.25)
