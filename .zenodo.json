@@ -1,0 +1,11 @@
+{
+  "title": "META-AC",
+  "creators": [
+    {
+      "name": "Felix Schaumann",
+      "affiliation": "University of Hamburg"
+    }
+  ],
+  "description": " An extension of the META model that adds the AMOC Carbon feedback.",
+  "license": "GPL-3.0-only"
+}
