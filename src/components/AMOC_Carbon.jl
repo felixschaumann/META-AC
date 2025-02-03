@@ -14,7 +14,7 @@
     deltaT_country_AMOC = Variable(index=[time, country], unit="degC")
     T_country_AMOC = Variable(index=[time, country], unit="degC")
     max_deltaT_country_AMOC = Parameter(index=[country], unit="degC")
-    Delta_AMOC = Parameter(unit="year", default=5)
+    Delta_AMOC = Parameter(unit="year", default=35)
     T_country_base = Parameter(index=[time, country], unit="degC")
     pattern_onset = Parameter(default=2015)
 
