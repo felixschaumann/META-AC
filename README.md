@@ -1,6 +1,6 @@
 # META-AC: AMOC-Carbon extension of the Model for Economic Tipping point Analysis
 
-This is an extension of the _Model for Economic Tipping point Analysis_ ([META](https://github.com/openmodels/META)) that adds the **AMOC Carbon (AC) feedback**. For the scripts of _Schaumann & Alastrué de Asenjo (2024): Weakening AMOC reduces ocean carbon uptake and increases the social cost of carbon_, see [here](https://github.com/felixschaumann/AMOC-Carbon).
+This is an extension of the _Model for Economic Tipping point Analysis_ ([META](https://github.com/openmodels/META)) that adds the **AMOC Carbon (AC) feedback**. For the scripts of _Schaumann & Alastrué de Asenjo (2025): Weakening AMOC reduces ocean carbon uptake and increases the social cost of carbon_, see [here for the paper-related code](https://github.com/felixschaumann/AMOC-Carbon). Find the Zenodo archive of this repository here: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13830720.svg)](https://doi.org/10.5281/zenodo.13830720)
 
 META is an advanced integrated assessment model (SC-IAM), designed as a model-based meta-analysis of the effects of tipping points on the social cost of carbon (SCC). The model simulates greenhouse gas emissions, temperature and sea-level rise, and market and non-market damages at the country level, and the effects of eight climate tipping points that have been studied in the climate economics literature.
 
